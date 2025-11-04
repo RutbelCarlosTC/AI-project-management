@@ -1,0 +1,282 @@
+{
+  "name": "Project Management AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -656,
+        112
+      ],
+      "id": "67a40057-c928-4ce0-b642-1943e17aaf49"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI project management assistant integrated with Email, Notion, and Google Calendar, Your responsibilities are as follows:\n\n1. **Notion Integration:**\n- Monitor and retrieve updates from our Notion database that tracks all active tasks, deadlines, and project statuses.\n- Identify any tasks that are overdue or nearing their deadline.\n- Identify the team member's emails working on those projects\n\n2. **Email Agent Prompt**\nProvide the following structured details to the email agent:\n**Send an email to Team Members (Task Updates Only)**\n**Recipients**: [Assigned team members' emails]\n**Subject**:Task Update: [Taske Name]\"\n**Key Details:**\n- Task name, current status, and deadline.\n- Actions required from the tean nemer.\n- Any relevant project links or lotion references.\n**Send an email to Project Manager (Weekly Report - Every Monday)**\n**Recipient:** rttitoca@unsa.edu.pe\n**Subject:** \"Weekly Project Summary  - [Week of {{$now}}]\"\n**Key Details:**\n- List of completed tasks.\n- List of ongoing tasks with progress updates.\n- List of overdue tasks and responsible team members.\n- List of tasks that have not started\n\n3. **Google Calendar Scheduling**\nIf a follow-up meeting is required, create a calendar invite with:\n**Participants:** Project manager and relevant team members.\n**Description:** Task details, status, and required discussion points.\n\n## Final Notes\n- Do not write the emails yourself; only provide structured prompts to the email agent.\n- Ensure notifications are sent only to relevant team members based on their assigned tasks.\n- The project manager should receive a **weekly summary only**, while team members receive **task-specific alerts**\n\nCurrent Time: {{$now}}",
+        "options": {
+          "systemMessage": "You must call the available tools to complete tasks. Always start by calling the Notion Agent tool",
+          "maxIterations": 20
+        }
+      },
+      "name": "Project Management AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -320,
+        112
+      ],
+      "id": "70b1dd44-8b62-4258-90e4-618efab65de6"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Project Management AI Agent') }}"
+      },
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        336
+      ],
+      "id": "84c06595-ef45-4610-b31a-9e177ad0d2c1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        336
+      ],
+      "id": "acbcbeb7-76bf-4940-87d3-29f32310e85f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Rc9miVWdVv9wh3AJ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "yvqSAqi0lJQO9DcW",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/yvqSAqi0lJQO9DcW",
+          "cachedResultName": "Email Agent Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -256,
+        336
+      ],
+      "id": "5cdc34a0-b47b-4d27-93db-aa614f9a8241",
+      "name": "Call 'Email Agent Workflow'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "u1wONQJJJPGB4peM",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/u1wONQJJJPGB4peM",
+          "cachedResultName": "Notion Agent Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        336
+      ],
+      "id": "823983c2-6fa7-40d0-b20e-8782f2cf2efe",
+      "name": "Call 'Notion Agent Workflow'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "TmOP1t9AnW2hWGSx",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/TmOP1t9AnW2hWGSx",
+          "cachedResultName": "Calendar Agent Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        112,
+        336
+      ],
+      "id": "9f05300b-1528-4a13-99ca-e09b809a7f4e",
+      "name": "Call 'Calendar Agent Workflow'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Email Agent Workflow'": {
+      "ai_tool": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Notion Agent Workflow'": {
+      "ai_tool": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Calendar Agent Workflow'": {
+      "ai_tool": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6ae8044a-4b9d-4472-b7aa-35653b5d1ac5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+  },
+  "id": "4Htpu5xP6VRt6fb6",
+  "tags": []
+}

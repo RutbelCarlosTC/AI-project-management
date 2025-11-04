@@ -1,0 +1,443 @@
+{
+  "name": "Notion Agent Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are a Notion-integrated AI agent responsible for managing and retrieving database information within Notion. You follow a strict execution order when interacting with Notion's API, ensuring database dependencies are met before performing actions.\n\n## Execution Rules\n1. **Get Many Databases First**: Before using any of the following tools, the agent must first call `Get Many Databases`:\n- `Get a Database`\n- `Create Database Page`\n- `Get Many Database Pages`\n- `Update Database Page`\n2. **Get Many Database Pages Before Updating**: Before calling \"`Update Database Page`, the agent must first use `Get Many Database Pages`.\n\n## Instructions\n1. **Retrieve User Data**: Use \"Get Users to fetch user details.\n2. **Search for a Page**: Use Search Page be found. if a Notion page needs to\n3. **Retrieve Database Information**:\n- Always start with `Get Many Databases` before retrieving or modifying a database.\nUse `Get a Database` only after confirming the database exists.\nUse `Get a Database` only after confirming the database exists.\n4. **Manage Database Pages**:\nBefore creating or updating a page, first retrieve all database pages using `Get Many Database Pages`\".\n- Use `Create Database Page` only after confirming the database structure.\n- Use `Update Database Page` only after retrieving existing pages with `Get Many Database Pages`.\n5. **Store Contextual Memory**: Maintain conversation flow using `Window Buffer Memory`.\n6. **Leverage OpenAI for Processing**: Use OpenAI Chat Model to interpret queries and select the correct Notion tool.\n\n## Tools\n- **OpenAI Chat Model**: Processes natural language queries.\n- **Window Buffer Memory**: Stores and retrieves context.\n- **Notion API Integrations**:\n    - `Get Users`\n    - `Search Page`\n    - `Get Many Databases` (always called first)\n    - `Get a Database` (requires `Get Many Databases` first)\n    - `Get Many Database Pages` (requires `Get Many Databases` first)\n    - `Create Database Page` (requires `Get Many Databases` first)\n    - `Update Database Page` (requires `Get Many Databases` first, then `Get Many Database Pages`)",
+          "passthroughBinaryImages": false
+        }
+      },
+      "name": "Notion AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -272,
+        480
+      ],
+      "id": "27a5cc4f-b373-407f-982d-f67419d08e5f",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Notion AI Agent') }}"
+      },
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        688
+      ],
+      "id": "759eb9ec-4af3-409a-a627-4ed2abeffaee"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string",
+              "id": "7bfd5e7c-8d1a-4836-afb7-32c38ee3b941"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        192,
+        400
+      ],
+      "id": "8a85519a-2f4e-44ae-8bf3-4d3f84a78c83"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        720
+      ],
+      "id": "81e62e7b-3615-4fa8-889e-e3e4aecd0844",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Rc9miVWdVv9wh3AJ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -592,
+        480
+      ],
+      "id": "8048830f-d90a-4cbd-aa2a-e313306da6e0",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        -544,
+        928
+      ],
+      "id": "bc0d2823-ae4b-46de-a656-1066de29b402",
+      "name": "Get many users in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Text', ``, 'string') }}",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        912
+      ],
+      "id": "1aa20020-1dd6-479a-99c4-63ec9e06b69b",
+      "name": "Search a page in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Database_Page', ``, 'string') }}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        -256,
+        848
+      ],
+      "id": "18e42109-a8cd-46a1-a340-d951b579a20b",
+      "name": "Update a database page in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Database', ``, 'string') }}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        -96,
+        848
+      ],
+      "id": "483aa983-e368-4224-b002-b832199751b2",
+      "name": "Get many database pages in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Database', ``, 'string') }}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        864
+      ],
+      "id": "c92b52e5-fe07-4931-bd5f-d34ba0732e60",
+      "name": "Create a database page in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "databaseId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Database', ``, 'string') }}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        }
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        848
+      ],
+      "id": "76208ed4-3bd7-4302-adda-57a7c3b9280d",
+      "name": "Get a database in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.notionTool",
+      "typeVersion": 2.2,
+      "position": [
+        272,
+        880
+      ],
+      "id": "35b6576e-3d4f-4b91-8255-9529143cae39",
+      "name": "Get many databases in Notion",
+      "credentials": {
+        "notionApi": {
+          "id": "Xdj3QehU21CKVov0",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "value": "Unable to retrieve data from Notion. Please try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        208,
+        560
+      ],
+      "id": "254a0351-936e-4991-9339-e7eec36f3d74"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Search all databases for tasks with past due dates or due within the next 7 days. For each task, the following is displayed: title with Notion link, current status, due date, and the email address of the assigned team member. Sort by due date in ascending order."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Notion AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many users in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search a page in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a database page in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database pages in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a database in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many databases in Notion": {
+      "ai_tool": [
+        [
+          {
+            "node": "Notion AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0decf210-cf90-474e-b51e-836e45dffedf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+  },
+  "id": "u1wONQJJJPGB4peM",
+  "tags": []
+}

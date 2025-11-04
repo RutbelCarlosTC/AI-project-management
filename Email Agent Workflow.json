@@ -1,0 +1,415 @@
+{
+  "name": "Email Agent Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are an email management assistant responsible for handling emails efficiently.\n\n## Email Management Actions\n- **\"Get Emails\"** - Retrieve emails when requested.\n- **\"Get Labels\"** - Fetch available email labels.\n- **\"Send Email\"** - Use this to send emails.\n- **\"Create Draft\"** - Generate a draft if the user requests one.\n- **\"Email Reply\"** - Respond to an email. First, use \"Get Emails\" to obtain the message ID.\n- **\"Mark Unread\"** - Mark an email as unread. First, use \"Get Emails\" to retrieve the message ID.\n- **\"Label Email\"** - Assign a label to an email. First, use \"Get Emails\" to get the message ID, then use \"Get Labels\" to obtain the label ID.\n\n## Final Notes\n- All emails must be formatted professionally in **HTML** and signed off as **\"Rutbel.\"**\n- Current date and time: **{{ $now }}**"
+        }
+      },
+      "name": "Email AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -64,
+        -368
+      ],
+      "id": "8affacac-e57e-4029-b22b-b059de650242",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string",
+              "id": "002ee55a-97dc-4c9d-a91c-5a081be29143"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        768,
+        -384
+      ],
+      "id": "8033afa8-73f2-48ed-af80-224f0b981698"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "value": "Unable to perform task. Please try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Try Again",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        800,
+        -160
+      ],
+      "id": "6a33f66e-6386-49e8-96b4-9b0601d6f207"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        -112
+      ],
+      "id": "d0bd049b-d95c-4a9e-aea1-ea6d2caf5856",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Rc9miVWdVv9wh3AJ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        -448
+      ],
+      "id": "c5b3084f-8cc4-4860-a894-5a028fcee9df",
+      "name": "When Executed by Another Workflow",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI(\"emailAddress\") }}",
+        "subject": "={{ $fromAI(\"subject\") }}",
+        "message": "={{ $fromAI(\"emailBody\") }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        144
+      ],
+      "id": "0055eb4d-aa6a-497d-9ebb-92c946ef54e0",
+      "name": "Send a message in Gmail",
+      "webhookId": "ab1ca381-c7f8-4ca7-805b-47adc5914609",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $fromAI(\"ID\", \"the message ID\") }}",
+        "message": "={{ $fromAI(\"emailBody\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        192
+      ],
+      "id": "40afbb6e-90cc-4d17-9105-43c165cc8b0f",
+      "name": "Reply to a message in Gmail",
+      "webhookId": "ab1ca381-c7f8-4ca7-805b-47adc5914609",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{$fromAI(\"ID\", \"the ID of message\")}}",
+        "labelIds": "={{$fromAI(\"labelID\")}}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        192
+      ],
+      "id": "7d2ae329-0286-408a-aef2-d6837253c307",
+      "name": "Add label to message in Gmail",
+      "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI(\"subject\") }}",
+        "emailType": "html",
+        "message": "={{ $fromAI(\"emailBody\") }}",
+        "options": {
+          "sendTo": "={{ $fromAI(\"emailAddress\") }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        144,
+        192
+      ],
+      "id": "b1579bac-cae3-4444-87e1-4f64e47c3593",
+      "name": "Create a draft in Gmail",
+      "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{ $fromAI(\"limit\", \"how many the user wants\") }}",
+        "simple": false,
+        "filters": {
+          "sender": "={{ $fromAI(\"sender\", \"who the emails are from\") }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        336,
+        192
+      ],
+      "id": "1d4aa6b2-3392-4087-917c-8906bb71fa17",
+      "name": "Get many messages in Gmail",
+      "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "label",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        528,
+        192
+      ],
+      "id": "73d57694-63bd-4d5f-a604-699bef494b16",
+      "name": "Get many labels in Gmail",
+      "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsUnread",
+        "messageId": "={{ $fromAI(\"messageID\") }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        192
+      ],
+      "id": "2f7ba36a-8593-45da-a55f-68f3740011b3",
+      "name": "Mark a message as unread in Gmail",
+      "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "T0nAVsxTGZ4AYIBp",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Send an email to team members for task updates. \n \n Task: Design and develop an interface\n Status: Not Started\n Due Date: 2023-03-23 (Approaching)\n Recipients: ctc3486@gmail.com\n \n Subject: Task Update: Design and develop an interface\n \n Key Details:\n- Task Name: Design and develop an interface\n- Current Status: Not Started\n- Deadline: 2023-03-23 (Approaching)\n- Actions Required: Begin design and development immediately.\n- Link: [Design and develop an interface](https://www.notion.so/Design-and-develop-an-interface-1ac89bce933a81a2a43ac4bca5ef86a7)"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Email AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many labels in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark a message as unread in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "613499cc-5884-43d5-b7dd-38f43cc6cabc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+  },
+  "id": "yvqSAqi0lJQO9DcW",
+  "tags": []
+}
