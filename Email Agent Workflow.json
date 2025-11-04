@@ -6,7 +6,7 @@
         "promptType": "define",
         "text": "={{ $json.query }}",
         "options": {
-          "systemMessage": "=# Overview\nYou are an email management assistant responsible for handling emails efficiently.\n\n## Email Management Actions\n- **\"Get Emails\"** - Retrieve emails when requested.\n- **\"Get Labels\"** - Fetch available email labels.\n- **\"Send Email\"** - Use this to send emails.\n- **\"Create Draft\"** - Generate a draft if the user requests one.\n- **\"Email Reply\"** - Respond to an email. First, use \"Get Emails\" to obtain the message ID.\n- **\"Mark Unread\"** - Mark an email as unread. First, use \"Get Emails\" to retrieve the message ID.\n- **\"Label Email\"** - Assign a label to an email. First, use \"Get Emails\" to get the message ID, then use \"Get Labels\" to obtain the label ID.\n\n## Final Notes\n- All emails must be formatted professionally in **HTML** and signed off as **\"Rutbel.\"**\n- Current date and time: **{{ $now }}**"
+          "systemMessage": "=# Overview\nYou are an email management assistant responsible for handling emails efficiently.\n\n## Email Management Actions\n- **\"Get Emails\"** - Retrieve emails when requested.\n- **\"Get Labels\"** - Fetch available email labels.\n- **\"Send Email\"** - Use this to send emails.\n- **\"Create Draft\"** - Generate a draft if the user requests one.\n- **\"Email Reply\"** - Respond to an email. First, use \"Get Emails\" to obtain the message ID.\n- **\"Mark Unread\"** - Mark an email as unread. First, use \"Get Emails\" to retrieve the message ID.\n- **\"Label Email\"** - Assign a label to an email. First, use \"Get Emails\" to get the message ID, then use \"Get Labels\" to obtain the label ID.\n\n## Final Notes\n- All emails must be formatted professionally in **HTML** and signed off as **\"Rutbel.\"**\n- **CRITICAL: All email content (subject and body) MUST be written in Spanish**\n- Current date and time: **{{ $now }}**"
         }
       },
       "name": "Email AI Agent",
@@ -405,7 +405,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "613499cc-5884-43d5-b7dd-38f43cc6cabc",
+  "versionId": "0ecadc18-f504-47f0-a7a0-c2ed600fb2b6",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
