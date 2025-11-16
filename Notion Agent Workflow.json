@@ -14,10 +14,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        -272,
-        480
+        -464,
+        80
       ],
-      "id": "27a5cc4f-b373-407f-982d-f67419d08e5f",
+      "id": "074b6d7e-ff83-4f37-b96d-af6a799bf75d",
       "onError": "continueErrorOutput"
     },
     {
@@ -29,10 +29,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.2,
       "position": [
-        -464,
-        688
+        -656,
+        288
       ],
-      "id": "759eb9ec-4af3-409a-a627-4ed2abeffaee"
+      "id": "cba7c91e-9e43-4b5f-b6fa-b3cd70d70dea"
     },
     {
       "parameters": {
@@ -52,10 +52,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        192,
-        400
+        0,
+        0
       ],
-      "id": "8a85519a-2f4e-44ae-8bf3-4d3f84a78c83"
+      "id": "c56f95a3-cbb5-4c35-8270-802da36c9dcc"
     },
     {
       "parameters": {
@@ -65,14 +65,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        -672,
-        720
+        -864,
+        320
       ],
-      "id": "81e62e7b-3615-4fa8-889e-e3e4aecd0844",
+      "id": "63710e3b-8815-4f77-8fc1-1891ebaddb04",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
-          "id": "Rc9miVWdVv9wh3AJ",
+          "id": "5tyDiZWdDg6HYpIe",
           "name": "Groq account"
         }
       }
@@ -90,10 +90,10 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -592,
-        480
+        -784,
+        80
       ],
-      "id": "8048830f-d90a-4cbd-aa2a-e313306da6e0",
+      "id": "83b99f11-582f-492d-868d-a5809f3677ca",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -105,14 +105,14 @@
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        -544,
-        928
+        -736,
+        528
       ],
-      "id": "bc0d2823-ae4b-46de-a656-1066de29b402",
+      "id": "d2aba8b0-4e9a-4db6-a8a9-729f2c4dd78c",
       "name": "Get many users in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -127,14 +127,14 @@
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        -384,
-        912
+        -576,
+        512
       ],
-      "id": "1aa20020-1dd6-479a-99c4-63ec9e06b69b",
+      "id": "09a144d5-dd20-4afe-a58e-3ea93a75a410",
       "name": "Search a page in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -154,14 +154,14 @@
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        -256,
-        848
+        -448,
+        448
       ],
-      "id": "18e42109-a8cd-46a1-a340-d951b579a20b",
+      "id": "f0a58244-19eb-46c1-8334-d19611bdce23",
       "name": "Update a database page in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -176,20 +176,19 @@
           "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Database', ``, 'string') }}",
           "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
         },
-        "returnAll": true,
         "options": {}
       },
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        -96,
-        848
+        -288,
+        448
       ],
-      "id": "483aa983-e368-4224-b002-b832199751b2",
+      "id": "72f01542-232e-48d8-adbd-0da598c62991",
       "name": "Get many database pages in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -209,14 +208,14 @@
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        80,
-        864
+        -112,
+        464
       ],
-      "id": "c92b52e5-fe07-4931-bd5f-d34ba0732e60",
+      "id": "94162d6a-d606-4b25-9292-1e6a20d7c608",
       "name": "Create a database page in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -234,14 +233,14 @@
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        464,
-        848
+        272,
+        448
       ],
-      "id": "76208ed4-3bd7-4302-adda-57a7c3b9280d",
+      "id": "b0016277-0290-4c10-81f3-80fb6ee4240c",
       "name": "Get a database in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -249,20 +248,19 @@
     {
       "parameters": {
         "resource": "database",
-        "operation": "getAll",
-        "returnAll": true
+        "operation": "getAll"
       },
       "type": "n8n-nodes-base.notionTool",
       "typeVersion": 2.2,
       "position": [
-        272,
-        880
+        80,
+        480
       ],
-      "id": "35b6576e-3d4f-4b91-8255-9529143cae39",
+      "id": "518dd1ea-77bc-48a8-87d4-6cad05610f55",
       "name": "Get many databases in Notion",
       "credentials": {
         "notionApi": {
-          "id": "Xdj3QehU21CKVov0",
+          "id": "x2HPZ1x0vTuUNh4j",
           "name": "Notion account"
         }
       }
@@ -284,10 +282,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        208,
-        560
+        16,
+        160
       ],
-      "id": "254a0351-936e-4991-9339-e7eec36f3d74"
+      "id": "2f214bd8-a79e-44fa-8e58-7de05b153ba5"
     }
   ],
   "pinData": {
@@ -433,11 +431,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "0decf210-cf90-474e-b51e-836e45dffedf",
+  "versionId": "0b744a84-2491-4391-834e-9b43ef0b6091",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+    "instanceId": "501a356f25b5e21f888ff70856156a670ee5433e1793058041627d0534f68f1e"
   },
-  "id": "u1wONQJJJPGB4peM",
+  "id": "eyvcpIxoxds36Qd1",
   "tags": []
 }

@@ -6,17 +6,17 @@
         "promptType": "define",
         "text": "={{ $json.query }}",
         "options": {
-          "systemMessage": "=# Overview\nYou are a calendar assistant responsible for managing events, including creating, retrieving, updating, and deleting entries in the user's calendar.\n\n## Calendar Management Actions\n- **\"Get Events\"** - Retrieve upcoming events when requested.\n- **\"Delete Event\"** - Before deleting an event, first use \"Get Events\" to find its ID.\n- **\"Update Event\"** - Before modifying an event, first use \"Get Events\" to locate its ID.\n- **\"Create Event\"** - Use this for personal or solo events.\n**\"Create Event with Attendee\"** - Use this when scheduling an event that includes other participants.\n\n## Final Notes\n- **CRITICAL: All event titles and descriptions MUST be written in Spanish**\n- Current date and time: **{{ $now }}**"
+          "systemMessage": "=# Overview\nYou are a calendar assistant responsible for managing events, including creating, retrieving, updating, and deleting entries in the user's calendar.\n\n## Calendar Management Actions\n- **\"Get Events\"** - Retrieve upcoming events when requested.\n- **\"Delete Event\"** - Before deleting an event, first use \"Get Events\" to find its ID.\n- **\"Update Event\"** - Before modifying an event, first use \"Get Events\" to locate its ID.\n- **\"Create Event\"** - Use this for personal or solo events.\n- **\"Create Event with Attendee\"** - Use this when scheduling an event that includes other participants.\n\n## Handling Date/Time Information\nIf the user provides:\n- **Specific start/end times**: Use them directly\n- **Only a date**: Default to 10:00 AM - 11:00 AM on that date\n- **A date range**: Choose the earliest date in the range at 10:00 AM - 11:00 AM\n- **Relative time** (e.g., \"in 2 days\"): Calculate from current date/time\n- **No time specified**: Default to 10:00 AM - 11:00 AM tomorrow\n\nAlways convert to proper datetime format (YYYY-MM-DD HH:MM or ISO 8601).\n\n## Final Notes\n- **CRITICAL: All event titles and descriptions MUST be written in Spanish**\n- Current date and time: **{{ $now }}**"
         }
       },
       "name": "Calendar AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        -464,
-        208
+        416,
+        0
       ],
-      "id": "33397847-4704-4761-8112-c3557680f812",
+      "id": "81df02db-e108-4b20-b48d-c9de1823a652",
       "onError": "continueErrorOutput"
     },
     {
@@ -37,10 +37,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        32,
-        288
+        912,
+        80
       ],
-      "id": "f4e42e9b-f258-4dc6-aa2f-836a0e2c95e2"
+      "id": "73703d84-85c6-4f0c-b476-265f4dd1cab1"
     },
     {
       "parameters": {
@@ -59,10 +59,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        32,
-        464
+        912,
+        256
       ],
-      "id": "8f6564e1-b4da-49bd-9019-92cb0dac9dae"
+      "id": "be3b50f4-2038-44dd-a286-78158bfde087"
     },
     {
       "parameters": {
@@ -72,15 +72,15 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        -880,
-        512
+        0,
+        304
       ],
-      "id": "f0e26057-94c4-4040-8fcd-a7b08e869a24",
+      "id": "4059a1a9-b3e0-4772-888a-be48c91777fe",
       "name": "Groq Chat Model",
       "notesInFlow": true,
       "credentials": {
         "groqApi": {
-          "id": "Rc9miVWdVv9wh3AJ",
+          "id": "5tyDiZWdDg6HYpIe",
           "name": "Groq account"
         }
       }
@@ -98,10 +98,10 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -880,
-        208
+        0,
+        0
       ],
-      "id": "75df37b3-5f25-403a-aca9-27ce1a2d73dd",
+      "id": "773d9735-2601-490d-8018-8c1137e1ac1f",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -122,14 +122,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -720,
-        576
+        160,
+        368
       ],
-      "id": "e38b4e12-f8ff-460a-914f-82fedd286fc8",
+      "id": "b306161b-fc0f-4283-9de1-05ddbcdfea1c",
       "name": "Create an event in Google Calendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "5g6PxbvoLXQYWU4y",
+          "id": "bPIMV5IrvInqj9cL",
           "name": "Google Calendar account"
         }
       }
@@ -152,14 +152,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -240,
-        576
+        640,
+        368
       ],
-      "id": "de23ad8d-c356-4b7d-b701-fb257b4cd0f5",
+      "id": "38c6756c-8b5c-4eff-a245-91625ca3414e",
       "name": "Update an event in Google Calendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "5g6PxbvoLXQYWU4y",
+          "id": "bPIMV5IrvInqj9cL",
           "name": "Google Calendar account"
         }
       }
@@ -179,14 +179,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -560,
-        576
+        320,
+        368
       ],
-      "id": "bd502cab-9817-4c0b-b6ff-7e8c8cfd382a",
+      "id": "a53412fe-ffc7-4d8e-915e-6325f6b94192",
       "name": "Delete an event in Google Calendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "5g6PxbvoLXQYWU4y",
+          "id": "bPIMV5IrvInqj9cL",
           "name": "Google Calendar account"
         }
       }
@@ -207,14 +207,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -400,
-        576
+        480,
+        368
       ],
-      "id": "8ae612e3-b5f9-495b-93be-3645b2fd0780",
+      "id": "d9566eb3-540e-4419-a1ee-e1a912d1b225",
       "name": "Get many events in Google Calendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "5g6PxbvoLXQYWU4y",
+          "id": "bPIMV5IrvInqj9cL",
           "name": "Google Calendar account"
         }
       }
@@ -239,14 +239,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -80,
-        592
+        784,
+        352
       ],
-      "id": "6a202481-7d43-4967-9dec-dfe6a0319813",
-      "name": "Create an event in Google Calendar1",
+      "id": "951d81c2-4103-461e-bfb3-774e5bcd69cb",
+      "name": "Create an event with attendees in Google Calendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "5g6PxbvoLXQYWU4y",
+          "id": "bPIMV5IrvInqj9cL",
           "name": "Google Calendar account"
         }
       }
@@ -345,17 +345,28 @@
           }
         ]
       ]
+    },
+    "Create an event with attendees in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "b3984872-3450-42f0-ab49-4cae31eb0a36",
+  "versionId": "2d42f6fe-5258-47b2-bb42-cc50ffc4fe55",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+    "instanceId": "501a356f25b5e21f888ff70856156a670ee5433e1793058041627d0534f68f1e"
   },
-  "id": "TmOP1t9AnW2hWGSx",
+  "id": "axUvu1K2swo3ZsuZ",
   "tags": []
 }

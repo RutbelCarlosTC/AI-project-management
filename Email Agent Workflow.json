@@ -6,17 +6,18 @@
         "promptType": "define",
         "text": "={{ $json.query }}",
         "options": {
-          "systemMessage": "=# Overview\nYou are an email management assistant responsible for handling emails efficiently.\n\n## Email Management Actions\n- **\"Get Emails\"** - Retrieve emails when requested.\n- **\"Get Labels\"** - Fetch available email labels.\n- **\"Send Email\"** - Use this to send emails.\n- **\"Create Draft\"** - Generate a draft if the user requests one.\n- **\"Email Reply\"** - Respond to an email. First, use \"Get Emails\" to obtain the message ID.\n- **\"Mark Unread\"** - Mark an email as unread. First, use \"Get Emails\" to retrieve the message ID.\n- **\"Label Email\"** - Assign a label to an email. First, use \"Get Emails\" to get the message ID, then use \"Get Labels\" to obtain the label ID.\n\n## Final Notes\n- All emails must be formatted professionally in **HTML** and signed off as **\"Rutbel.\"**\n- **CRITICAL: All email content (subject and body) MUST be written in Spanish**\n- Current date and time: **{{ $now }}**"
+          "systemMessage": "=# Overview\nYou are an email management assistant responsible for handling emails efficiently.\n\n## Email Management Actions\n- **\"Get Emails\"** - Retrieve emails when requested.\n- **\"Get Labels\"** - Fetch available email labels.\n- **\"Send Email\"** - Use this to send emails.\n- **\"Create Draft\"** - Generate a draft if the user requests one.\n- **\"Email Reply\"** - Respond to an email. First, use \"Get Emails\" to obtain the message ID.\n- **\"Mark Unread\"** - Mark an email as unread. First, use \"Get Emails\" to retrieve the message ID.\n- **\"Label Email\"** - Assign a label to an email. First, use \"Get Emails\" to get the message ID, then use \"Get Labels\" to obtain the label ID.\n\n## Final Notes\n- All emails must be formatted professionally in **HTML** and signed off as **\"Rutbel.\"**\n- **CRITICAL: All email content (subject and body) MUST be written in Spanish**\n- Current date and time: **{{ $now }}**",
+          "maxIterations": 10
         }
       },
       "name": "Email AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        -64,
-        -368
+        128,
+        -16
       ],
-      "id": "8affacac-e57e-4029-b22b-b059de650242",
+      "id": "549d0338-b3ac-4559-996c-7a37fe9da0e2",
       "onError": "continueErrorOutput"
     },
     {
@@ -37,10 +38,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        768,
-        -384
+        960,
+        -32
       ],
-      "id": "8033afa8-73f2-48ed-af80-224f0b981698"
+      "id": "832260bb-7e66-4206-85db-6bc79f498c31"
     },
     {
       "parameters": {
@@ -59,27 +60,27 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        800,
-        -160
+        992,
+        208
       ],
-      "id": "6a33f66e-6386-49e8-96b4-9b0601d6f207"
+      "id": "d7652a33-60d2-49ea-a5d4-7a04aaa2ea97"
     },
     {
       "parameters": {
-        "model": "openai/gpt-oss-120b",
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        -544,
-        -112
+        -352,
+        256
       ],
-      "id": "d0bd049b-d95c-4a9e-aea1-ea6d2caf5856",
+      "id": "2fd29ad5-77f9-434f-b0ce-436e8be985d2",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
-          "id": "Rc9miVWdVv9wh3AJ",
+          "id": "5tyDiZWdDg6HYpIe",
           "name": "Groq account"
         }
       }
@@ -97,10 +98,10 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -576,
-        -448
+        -384,
+        -96
       ],
-      "id": "c5b3084f-8cc4-4860-a894-5a028fcee9df",
+      "id": "472d3e6f-558f-4151-8e45-9943ca81bb0d",
       "name": "When Executed by Another Workflow",
       "alwaysOutputData": false,
       "executeOnce": false,
@@ -118,15 +119,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        -432,
-        144
+        -240,
+        512
       ],
-      "id": "0055eb4d-aa6a-497d-9ebb-92c946ef54e0",
+      "id": "dbb51e00-279f-4deb-84a9-5f58a54b983f",
       "name": "Send a message in Gmail",
       "webhookId": "ab1ca381-c7f8-4ca7-805b-47adc5914609",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -141,15 +142,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        -224,
-        192
+        -32,
+        560
       ],
-      "id": "40afbb6e-90cc-4d17-9105-43c165cc8b0f",
+      "id": "64d03805-9a01-494f-b4ba-fd8454c2c430",
       "name": "Reply to a message in Gmail",
       "webhookId": "ab1ca381-c7f8-4ca7-805b-47adc5914609",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -163,15 +164,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        -48,
-        192
+        144,
+        560
       ],
-      "id": "7d2ae329-0286-408a-aef2-d6837253c307",
+      "id": "d62410be-7b09-4a5a-87f9-23ae0ad51935",
       "name": "Add label to message in Gmail",
       "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -189,15 +190,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        144,
-        192
+        336,
+        560
       ],
-      "id": "b1579bac-cae3-4444-87e1-4f64e47c3593",
+      "id": "ffce22ba-c636-418d-8122-41a82d337b6b",
       "name": "Create a draft in Gmail",
       "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -215,15 +216,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        336,
-        192
+        528,
+        560
       ],
-      "id": "1d4aa6b2-3392-4087-917c-8906bb71fa17",
+      "id": "a9e24026-94f6-457a-9745-86bec964b802",
       "name": "Get many messages in Gmail",
       "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -236,15 +237,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        528,
-        192
+        720,
+        560
       ],
-      "id": "73d57694-63bd-4d5f-a604-699bef494b16",
+      "id": "2a101ae4-bd25-4b9b-953f-92f12ce7f252",
       "name": "Get many labels in Gmail",
       "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -257,15 +258,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        720,
-        192
+        912,
+        560
       ],
-      "id": "2f7ba36a-8593-45da-a55f-68f3740011b3",
+      "id": "7c82be40-1292-46e0-a3e6-a63467a867c5",
       "name": "Mark a message as unread in Gmail",
       "webhookId": "a9834420-5eb4-4ef3-9d3a-edb06fc8cba0",
       "credentials": {
         "gmailOAuth2": {
-          "id": "T0nAVsxTGZ4AYIBp",
+          "id": "W2dHs5ykgLHfusa0",
           "name": "Gmail account"
         }
       }
@@ -401,15 +402,13 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1",
-    "callerPolicy": "workflowsFromSameOwner",
-    "availableInMCP": false
+    "executionOrder": "v1"
   },
-  "versionId": "0ecadc18-f504-47f0-a7a0-c2ed600fb2b6",
+  "versionId": "44b993f4-894a-41ab-a93c-2eb558120eaf",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+    "instanceId": "501a356f25b5e21f888ff70856156a670ee5433e1793058041627d0534f68f1e"
   },
-  "id": "yvqSAqi0lJQO9DcW",
+  "id": "Vi9MFzJxBDJIHqjR",
   "tags": []
 }

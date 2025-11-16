@@ -15,28 +15,28 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
       "position": [
-        -656,
-        112
+        0,
+        0
       ],
-      "id": "67a40057-c928-4ce0-b642-1943e17aaf49"
+      "id": "cc12af69-b80a-4be5-b4f0-806fb9281aa5"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=You are an AI project management assistant integrated with Email, Notion, and Google Calendar. Your responsibilities are as follows:\n\n1. **Notion Integration:**\n- Monitor and retrieve updates from our Notion database that tracks all active tasks, deadlines, and project statuses.\n- Identify any tasks that are overdue or nearing their deadline.\n- Identify the team member's emails working on those projects\n\n2. **Email Agent Prompt**\nProvide the following structured details to the email agent:\n**Send an email to Team Members (Task Updates Only)**\n**Recipients**: [Assigned team members' emails]\n**Subject**: \"Task Update: [Task Name]\" **IN SPANISH**\n**Key Details:**\n- Task name, current status, and deadline.\n- Actions required from the team member.\n- Any relevant project links or Notion references.\n**IMPORTANT: All email content must be written in Spanish**\n\n**Send an email to Project Manager (Weekly Report - Every Monday)**\n**Recipient:** rttitoca@unsa.edu.pe\n**Subject:** \"Weekly Project Summary - [Week of {{$now}}]\" **IN SPANISH**\n**Key Details:**\n- List of completed tasks.\n- List of ongoing tasks with progress updates.\n- List of overdue tasks and responsible team members.\n- List of tasks that have not started.\n**IMPORTANT: All email content must be written in Spanish**\n\n3. **Google Calendar Scheduling**\nIf a follow-up meeting is required, create a calendar invite with:\n**Participants:** Project manager and relevant team members.\n**Event Title:** **IN SPANISH**\n**Description:** Task details, status, and required discussion points **IN SPANISH**\n\n## Final Notes\n- **CRITICAL: All email content, calendar event titles, and descriptions MUST be generated in Spanish**\n- Do not write the emails yourself; only provide structured prompts to the email agent.\n- Ensure notifications are sent only to relevant team members based on their assigned tasks.\n- The project manager should receive a **weekly summary only**, while team members receive **task-specific alerts**\n\nCurrent Time: {{$now}}",
+        "text": "=You are an AI project management assistant integrated with Email, Notion, and Google Calendar. Your responsibilities are as follows:\n\n1. **Notion Integration:**\n- Monitor and retrieve updates from our Notion database that tracks all active tasks, deadlines, and project statuses.\n- Identify any tasks that are overdue or nearing their deadline.\n- Identify the team member's emails working on those projects\n\n2. **Email Agent Prompt**\nProvide the following structured details to the email agent:\n**Send an email to Team Members (Task Updates Only)**\n**Recipients**: [Assigned team members' emails]\n**Subject**: \"Task Update: [Task Name]\" **IN SPANISH**\n**Key Details:**\n- Task name, current status, and deadline.\n- Actions required from the team member.\n- Any relevant project links or Notion references.\n**IMPORTANT: All email content must be written in Spanish**\n\n**Send an email to Project Manager (Weekly Report - Every Monday)**\n**Recipient:** rttitoca@unsa.edu.pe\n**Subject:** \"Weekly Project Summary - [Week of {{$now}}]\" **IN SPANISH**\n**Key Details:**\n- List of completed tasks.\n- List of ongoing tasks with progress updates.\n- List of overdue tasks and responsible team members.\n- List of tasks that have not started.\n**IMPORTANT: All email content must be written in Spanish**\n\n3. **Google Calendar Execution - CRITICAL**\nAFTER sending emails, MUST call Calendar Agent with exact format:\n\"Create event: Title [Spanish], Description [Spanish with task details], Start: YYYY-MM-DD 10:00, End: YYYY-MM-DD 11:00, Attendees: rttitoca@unsa.edu.pe, [team emails]\"\nSchedule 2-3 days from today.\n\nEXECUTION ORDER (MANDATORY):\n1. First: Call Notion Agent to get task data\n2. Second: Call Email Agent to send notifications\n3. Third: Call Calendar Agent to schedule follow-up meeting (if needed)\n\n**CRITICAL**: Execute tools, don't just describe them.\n\n## Final Notes\n- **CRITICAL: All email content, calendar event titles, and descriptions MUST be generated in Spanish**\n- Do not write the emails yourself; only provide structured prompts to the email agent.\n- Ensure notifications are sent only to relevant team members based on their assigned tasks.\n- The project manager should receive a **weekly summary only**, while team members receive **task-specific alerts**\n\nCurrent Time: {{$now}}",
         "options": {
           "systemMessage": "You must call the available tools to complete tasks. Always start by calling the Notion Agent tool",
-          "maxIterations": 20
+          "maxIterations": 30
         }
       },
       "name": "Project Management AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        -320,
-        112
+        416,
+        0
       ],
-      "id": "70b1dd44-8b62-4258-90e4-618efab65de6"
+      "id": "7c644f53-a7e6-4aa6-a04e-35f6866fe67c"
     },
     {
       "parameters": {
@@ -47,80 +47,18 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.2,
       "position": [
-        -432,
-        336
+        352,
+        224
       ],
-      "id": "84c06595-ef45-4610-b31a-9e177ad0d2c1"
-    },
-    {
-      "parameters": {
-        "model": "openai/gpt-oss-120b",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
-      "typeVersion": 1,
-      "position": [
-        -624,
-        336
-      ],
-      "id": "acbcbeb7-76bf-4940-87d3-29f32310e85f",
-      "name": "Groq Chat Model",
-      "credentials": {
-        "groqApi": {
-          "id": "Rc9miVWdVv9wh3AJ",
-          "name": "Groq account"
-        }
-      }
+      "id": "bbbde4b4-6b50-4456-98a6-38dbad2f59a4"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "yvqSAqi0lJQO9DcW",
+          "value": "eyvcpIxoxds36Qd1",
           "mode": "list",
-          "cachedResultUrl": "/workflow/yvqSAqi0lJQO9DcW",
-          "cachedResultName": "Email Agent Workflow"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}"
-          },
-          "matchingColumns": [
-            "query"
-          ],
-          "schema": [
-            {
-              "id": "query",
-              "displayName": "query",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        -256,
-        336
-      ],
-      "id": "5cdc34a0-b47b-4d27-93db-aa614f9a8241",
-      "name": "Call 'Email Agent Workflow'"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "u1wONQJJJPGB4peM",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/u1wONQJJJPGB4peM",
+          "cachedResultUrl": "/workflow/eyvcpIxoxds36Qd1",
           "cachedResultName": "Notion Agent Workflow"
         },
         "workflowInputs": {
@@ -139,8 +77,7 @@
               "defaultMatch": false,
               "display": true,
               "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
+              "type": "string"
             }
           ],
           "attemptToConvertTypes": false,
@@ -150,19 +87,19 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        -80,
-        336
+        704,
+        224
       ],
-      "id": "823983c2-6fa7-40d0-b20e-8782f2cf2efe",
+      "id": "5ddc00ba-23d6-404f-bd97-5bbf195576ee",
       "name": "Call 'Notion Agent Workflow'"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "TmOP1t9AnW2hWGSx",
+          "value": "axUvu1K2swo3ZsuZ",
           "mode": "list",
-          "cachedResultUrl": "/workflow/TmOP1t9AnW2hWGSx",
+          "cachedResultUrl": "/workflow/axUvu1K2swo3ZsuZ",
           "cachedResultName": "Calendar Agent Workflow"
         },
         "workflowInputs": {
@@ -181,8 +118,7 @@
               "defaultMatch": false,
               "display": true,
               "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
+              "type": "string"
             }
           ],
           "attemptToConvertTypes": false,
@@ -192,11 +128,72 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        112,
-        336
+        880,
+        224
       ],
-      "id": "9f05300b-1528-4a13-99ca-e09b809a7f4e",
+      "id": "c0821c49-eb24-40c4-b99c-2cc692840f28",
       "name": "Call 'Calendar Agent Workflow'"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        208,
+        208
+      ],
+      "id": "0101fe1a-f4ce-480e-a824-7a8287a35c36",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5tyDiZWdDg6HYpIe",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Vi9MFzJxBDJIHqjR",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Vi9MFzJxBDJIHqjR",
+          "cachedResultName": "Email Agent Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        224
+      ],
+      "id": "6a73d11b-a283-4a0b-8daa-c58764321b7c",
+      "name": "Call 'Email Agent Workflow'"
     }
   ],
   "pinData": {},
@@ -223,28 +220,6 @@
         ]
       ]
     },
-    "Groq Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Project Management AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call 'Email Agent Workflow'": {
-      "ai_tool": [
-        [
-          {
-            "node": "Project Management AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call 'Notion Agent Workflow'": {
       "ai_tool": [
         [
@@ -266,17 +241,39 @@
           }
         ]
       ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Email Agent Workflow'": {
+      "ai_tool": [
+        [
+          {
+            "node": "Project Management AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "fd1cf25f-702f-49a8-9c53-4ac41cd0f5f7",
+  "versionId": "8c18958e-c04c-4def-93db-001616bf0a36",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4398f85953f7004d3f48e3381aa4765ed35c739d31879084f05f2050163adf2f"
+    "instanceId": "501a356f25b5e21f888ff70856156a670ee5433e1793058041627d0534f68f1e"
   },
-  "id": "4Htpu5xP6VRt6fb6",
+  "id": "rEuwDH6Pge715Egq",
   "tags": []
 }
